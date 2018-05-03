@@ -22,4 +22,5 @@ DataUtil 时间工具
 FileUtils 文件处理，读写
 MD5Utils 摘要算法，生成唯一指纹
 UserAgentUtils 浏览器UA代理
+PropertiesUtils 获取java Properties装备对象
 ```
