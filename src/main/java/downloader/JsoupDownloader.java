@@ -38,7 +38,7 @@ public class JsoupDownloader {
      * @param url
      * @return Jsoup.Document
      */
-    public Document get(String url){
+    public Document get(String url) throws Exception {
         return get(url, null, null);
     }
 
@@ -48,7 +48,7 @@ public class JsoupDownloader {
      * @param header
      * @return
      */
-    public Document get(String url,Map<String, String> header){
+    public Document get(String url,Map<String, String> header) throws Exception {
         return get(url, header, null);
     }
     /**
@@ -56,7 +56,7 @@ public class JsoupDownloader {
      * @param  url, header, proxy
      * @return
      */
-    public Document get(String url, Map<String, String> header, Map<String,String> proxy) {
+    public Document get(String url, Map<String, String> header, Map<String,String> proxy) throws Exception {
         Document document = new Document("");
         cookies = new HashMap<String, String>();
         int i =  0;
@@ -85,11 +85,11 @@ public class JsoupDownloader {
                 this.cookies = res.cookies();
                 break;
 
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
                 logger.info("重试下载网页第{}次,网址为：{}",i, url);
-            }catch (Exception e){
-                logger.info("another exception, I will ignore");
+                if (i == retryTimes)
+                    throw e;
             }
         }
 
@@ -103,7 +103,7 @@ public class JsoupDownloader {
      * @param data
      * @return
      */
-    public Document post(String url, Map<String, String> data){
+    public Document post(String url, Map<String, String> data) throws IOException {
         return post(url, null, data);
     }
 
@@ -114,7 +114,7 @@ public class JsoupDownloader {
      * @param data
      * @return
      */
-    public Document post(String url, Map<String, String> header, Map<String, String> data) {
+    public Document post(String url, Map<String, String> header, Map<String, String> data) throws IOException {
 
         Connection conn = Jsoup.connect(url);
 
@@ -148,7 +148,8 @@ public class JsoupDownloader {
             } catch (IOException e) {
                 e.printStackTrace();
                 logger.info("重试下载网页第{}次,网址为：{}",i, url);
-                continue;
+                if (i == retryTimes)
+                    throw e;
             }
         }
 
